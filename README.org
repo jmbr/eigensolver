@@ -1,0 +1,50 @@
+#+TITLE: Eigensolver library
+#+AUTHOR: Juan M. Bello-Rivas <jmbr@superadditive.com>
+
+* Description
+
+This library contains code for the fast computation of eigenvectors
+corresponding to the dominant eigenvalues of large, sparse matrices.
+This code can be used with arbitrary matrices. However, its main
+application is the obtainment of the stationary distributions of
+stochastic matrices corresponding to Markov chains with very large
+state spaces.
+
+* Dependencies
+
+The library uses ARPACK-ng [1] for the (shift-and-invert) Arnoldi
+iteration method together with the SPQR solver from the SuiteSparse
+library [2].
+
+* Compilation
+
+Follow these steps:
+
+  mkdir build
+   
+  cmake ..
+   
+  make && make test
+
+* Usage
+
+The program test-eigen-solver is an example of a stand-alone tool for
+computing the dominant eigenvalue of a sparse matrix.
+
+Matrices are stored as text files whose first line contains the
+dimension (maximum number of rows or columns) with each of the
+remaining lines containing two indices and a value (separated by white
+space).  There are several examples of valid matrix files in the
+test-data folder.
+
+Support for the Matrix Market format [3] will be added in the future.
+
+
+[1] Lehoucq, R. B., Sorensen, D. C., & Yang, C. (1998). ARPACK Users’
+Guide. doi:10.1137/1.9780898719628
+
+[2] Davis, T. A. (2011). Algorithm 915, SuiteSparseQR: multifrontal
+multithreaded rank-revealing sparse QR factorization. ACM
+Trans. Math. Software, 38(1), 1–22. doi:10.1145/2049662.2049670
+
+[3] http://math.nist.gov/MatrixMarket/
