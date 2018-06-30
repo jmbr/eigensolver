@@ -79,12 +79,16 @@ const std::map<int, std::string> dneupd_messages = {
     "entering DNEUPD." }
 };
 
+eigen_solver::eigen_solver(size_t max_iterations_, size_t max_basis_vectors_)
+    : max_iterations(max_iterations_), max_basis_vectors(max_basis_vectors_) {
+}
+
 int eigen_solver::solve(linear_algebra::matrix const& A,
                         linear_algebra::vector& x0,
-                        double* ritz_value) {
+                        double* ritz_value) const noexcept {
   int n = A.size();
   int maxn = n;  // Maximum problem size.
-  int nev = 1;   // Number of eigenvalues requested.
+  int nev = 10;   // Number of eigenvalues requested.
   // int maxnev = nev; // Maximum NEV allowed.
   int ncv = max_basis_vectors;
   int maxncv = ncv;  // Maximum NCV allowed
@@ -142,7 +146,8 @@ int eigen_solver::solve(linear_algebra::matrix const& A,
   timer clock;
   clock.tic();
 
-  for (int itr = 0; itr < maxitr; ++itr) {
+  int itr;
+  for (itr = 0; itr < maxitr; ++itr) {
     dnaupd_(&ido, bmat, &n, which, &nev, &tol, resid, &ncv, &v[0], &ldv,
             &iparam[0], &ipntr[0], &workd[0], &workl[0], &lworkl, &info);
 
@@ -169,8 +174,8 @@ int eigen_solver::solve(linear_algebra::matrix const& A,
 
   clock.toc();
 
-  std::clog << "Done with Arnoldi iteration (" << clock.seconds()
-            << " seconds).\n"
+  std::clog << "Done with Arnoldi iteration after " << itr
+            << " iterations (" << clock.seconds() << " seconds).\n"
             << "Running postprocessing step...\n";
 
   clock.tic();
